@@ -9,7 +9,8 @@
  relizando agrupaciones de interés para el análisis
  Y está pendiente de realizar la comprobacion de la normalidad y la homogneización de la varianza
  Así como la aplicación de pruebas estadísticas la visualización y la conclusión
- El codigo en R se adjunta en este repositorio
+ El codigo en R se adjunta en este repositorio.
+ Así como el fichero train.csv que es el dataset original sobre el que se hizo el estudio
 
 Práctica 2. Tipología y Ciclo de vida de los datos
 
