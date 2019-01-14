@@ -12,6 +12,7 @@
  El codigo en R se adjunta en este repositorio
 
 Práctica 2. Tipología y Ciclo de vida de los datos
+
 Jose Vicente Márquez Garrido
 
 14 de enero de 2019
