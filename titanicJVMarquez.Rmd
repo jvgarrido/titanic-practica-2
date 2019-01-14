@@ -1,0 +1,122 @@
+---
+title: "Práctica 2. Tipología y Ciclo de vida de los datos"
+author: "Jose Vicente Márquez Garrido"
+date: "14 de enero de 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+A continuación se muestra el código y el resultado de su ejecución que ha sido utilizado para la confección de la Practica 2 de Tipologia y ciclo de vida de los datos
+
+1.- Descripción del Dataset
+
+La colección de datos que es la fuente de este análisis procede de la web de Kaggle del siguiente enlace: https://www.kaggle.com/c/3136/download-all y se corresponde con un listado de pasajeros del Titanic tanto supervivientes como no.
+
+Se trata de un dataset que consta de dos ficheros csv: train y test, cuyo nombre es autoexplicativo, puesto que se trata de una de las actividades iniciales de la página de Kaggle para entrenar nuestras habilidades en Data Science.
+
+El fichero train contiene 891 registros(o filas) y 12 variables (o columnas). Las 12 variables con las siguientes:
+
+PassengerId: un simple numero de identificador de pasajero.
+
+Survived: Que nos indica si el pasajero sobrevivió con un 1 o sino con el valor 0
+
+Pclass: Que nos indica en que clase viajaba el pasajero y que va de 1 hasta 3
+
+Name: El nombre, apellidos y tratamiento del pasajeros
+
+Sex: el sexo del pasajero
+
+Age: la edad del pasajero
+
+SibSp: el número de parientes hermanos o cónyuges abordo del Titanic
+
+Parch: el número de parientes padres o hijos abordo de Titanic
+
+Ticket: el identificador del ticket del pasajero
+
+Fare: la tarifa pagada
+
+Cabin: la cabina que ocupaban si es que tenían
+
+Embarked: la ciudad donde embarcaron
+
+2.- Integración y selección de los datos
+```{r titanic2}
+# Lectura de datos: importación del dataset train.csv
+titanic <- read.csv("train.csv")
+
+#eliminamos las columnas 1, 4, y 9
+titanic <- titanic[c(-1,-4,-9)]
+
+#comprobamos que el dataframe tiene la estructura correcta listando las primeras filas
+head(titanic[,1:9])
+
+#comprobamos que tipo de dato asigna R a las variables
+sapply(titanic, function(x) class(x))
+```
+3.- Limpieza de los datos
+
+
+```{r titanic3}
+#Comprobamos si existen ceros en la columna Pclass
+ceroPclass  <- subset(titanic,Pclass=="0")
+ceroPclass
+
+#Comprobamos si existen ceros en la columna Age
+ceroAge  <- subset(titanic,Age=="0")
+ceroAge
+
+
+#comprobamos que columnas tienen valores vacíos y en que cantidad
+sapply(titanic, function(x) sum(is.na(x)))
+
+#primero obtenemos la media de edad por sexo
+media_male_Age <- mean(titanic[titanic$Sex=="male", "Age"], na.rm=TRUE)
+media_female_Age <- mean(titanic[titanic$Sex=="female", "Age"], na.rm=TRUE)
+
+media_male_Age
+media_female_Age
+
+#sustituimos los valores vacios de Age por el valor medio de la edad de los pasajeros
+titanic[is.na(titanic$Age) & titanic$Sex=="male","Age"] <- media_male_Age
+titanic[is.na(titanic$Age) & titanic$Sex=="female","Age"] <- media_female_Age
+
+#finalmente comprobamos que ya no existen valores vacíos en el dataframe
+sapply(titanic, function(x) sum(is.na(x)))
+
+#deteccion de valores extremos
+boxplot.stats(titanic$Age)$out
+boxplot.stats(titanic$SibSp)$out
+boxplot.stats(titanic$Parch)$out
+boxplot.stats(titanic$Fare)$out
+```
+4.- Análisis de Datos
+```{r titanic4}
+#Grupo por sexo (Sex)
+titanic.male <- titanic[titanic$Sex == "male",]
+titanic.female <- titanic[titanic$Sex == "female",]
+
+#Grupo por clase en la que viajan ( Pclass)
+titanic.primera <- titanic[titanic$Pclass == "1",]
+titanic.segunda <- titanic[titanic$Pclass == "2",]
+titanic.tercera <- titanic[titanic$Pclass == "3",]
+
+#Grupo por familiares abordo(SibSp y Parch)
+titanic.sinfamilia <- titanic[titanic$SibSp=="0" & titanic$Parch=="0",]
+titanic.confamilia <- titanic[titanic$SibSp != "0" | titanic$Parch !="0",]
+
+#Grupo con cabina y sin cabina (Cabin)
+titanic.concabina <- titanic[titanic$Cabin !="",]
+titanic.sincabina <- titanic[titanic$Cabin =="",]
+
+
+```
+
+## Including Plots
+
+
